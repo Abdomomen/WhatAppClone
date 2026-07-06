@@ -22,4 +22,4 @@ export const deleteContactSchema = z.object({
   id: z.string({ required_error: "ID is required" }).min(1, "ID is required"),
 });
 
-export { updateProfileSchema, avatarSchema };
+export default updateProfileSchema;
