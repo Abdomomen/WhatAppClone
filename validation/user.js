@@ -15,15 +15,11 @@ export const avatarSchema = z.object({
   }),
 });
 export const addContactsSchema = z.object({
-  username: z
-    .string({ required_error: "Username is required" })
-    .min(3, "Username must be at least 3 characters long"),
+  id: z.string({ required_error: "ID is required" }).min(1, "ID is required"),
 });
 
 export const deleteContactSchema = z.object({
-  username: z
-    .string({ required_error: "Username is required" })
-    .min(3, "Username must be at least 3 characters long"),
+  id: z.string({ required_error: "ID is required" }).min(1, "ID is required"),
 });
 
 export { updateProfileSchema, avatarSchema };

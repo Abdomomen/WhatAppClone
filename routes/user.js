@@ -33,15 +33,13 @@ userRouter.put(
 
 userRouter.get("/contacts", verifyJwt, getContacts);
 userRouter.post(
-  "/contacts",
+  "/contacts/:id",
   verifyJwt,
-  validate(addContactsSchema),
   addContacts,
 );
 userRouter.delete(
-  "/contacts",
+  "/contacts/:id",
   verifyJwt,
-  validate(deleteContactSchema),
   deleteContact,
 );
 

@@ -57,8 +57,8 @@ const userServices = {
     }
     return { success: true, data: user.contacts };
   },
-  addContacts: async (userId, username) => {
-    let contact = await User.findOne({ username });
+  addContacts: async (userId, id) => {
+    let contact = await User.findById(id);
     if (!contact) {
       throw new Error("Contact not found");
     }
@@ -78,8 +78,8 @@ const userServices = {
 
     return { success: true };
   },
-  deleteContact: async (userId, username) => {
-    let contact = await User.findOne({ username });
+  deleteContact: async (userId, id) => {
+    let contact = await User.findById(id);
     if (!contact) {
       throw new Error("Contact not found");
     }

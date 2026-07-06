@@ -1,6 +1,6 @@
 import asyncWrapper from "../middlewares/asyncWrapper.js";
 import userServices from "../services/user.js";
-
+import { addContactsSchema,deleteContactSchema } from "../validation/user.js";
 const updateProfile = asyncWrapper(async (req, res) => {
   let { name, email, bio } = req.body;
   let result = await userServices.updateProfile({
@@ -36,8 +36,12 @@ const getContacts = asyncWrapper(async (req, res) => {
 
 const addContacts = asyncWrapper(async (req, res) => {
   let userId = req.user.id;
-  let { username } = req.body;
-  let result = await userServices.addContacts(userId, username);
+  let {id} = req.params;
+  let resultParse=addContactsSchema.safeParse({id})
+  if(!resultParse.success){
+    throw new Error(resultParse.error.message);
+  }
+  let result = await userServices.addContacts(userId, resultParse.data.id);
   res.status(200).json({
     success: true,
   });
@@ -45,8 +49,12 @@ const addContacts = asyncWrapper(async (req, res) => {
 
 const deleteContact = asyncWrapper(async (req, res) => {
   let userId = req.user.id;
-  let { username } = req.body;
-  let result = await userServices.deleteContact(userId, username);
+  let { id } = req.params;
+  let resultParse=deleteContactSchema.safeParse({id})
+  if(!resultParse.success){
+    throw new Error(resultParse.error.message);
+  }
+  let result = await userServices.deleteContact(userId, resultParse.data.id);
   res.status(200).json({
     success: true,
   });
