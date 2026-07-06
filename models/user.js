@@ -1,49 +1,58 @@
-import mongoose,{ Schema } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 
-const userSchema= new Schema({
-    name:{
-        type:String,
-        required:true,
-        trim:true
+const userSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+      trim: true,
     },
-    username:{
-        type:String,
-        unique:true,
-        required:true,
-        trim:true,
-        lowercase:true
-    }
-    ,
-    email:{
-        type:String,
-        required:true,
-        trim:true,
-        unique:true,
-        lowercase:true
+    username: {
+      type: String,
+      unique: true,
+      required: true,
+      trim: true,
+      lowercase: true,
     },
-    password:{
-        type:String,
-        required:true,
-        lowercase:true
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+      unique: true,
+      lowercase: true,
     },
-    role:{
-        type:String,
-        enum:["user","admin"],
-        default:"user"
+    password: {
+      type: String,
+      required: true,
+      select: false,
     },
-    contacts:[{
-        type:Schema.Types.ObjectId,
-        ref:"User"
-    }],
-    bio:{
-        type:String,
-        trim:true
+    role: {
+      type: String,
+      enum: ["user", "admin"],
+      default: "user",
     },
-    avatar:{
-        type:String,
-        default:"https://cdn-icons-png.flaticon.com/512/149/149071.png"
+    contacts: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
+    bio: {
+      type: String,
+      trim: true,
     },
-    
-    
-},{timestamps:true})
+    avatar: {
+      type: String,
+      default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+    },
+    refreshToken: {
+      type: String,
+      default: null,
+    },
+  },
+  { timestamps: true },
+);
 
+const User = mongoose.model("User", userSchema);
+
+export default User;
