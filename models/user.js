@@ -42,8 +42,13 @@ const userSchema = new Schema(
       trim: true,
     },
     avatar: {
-      type: String,
-      default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      url:{
+        type: String,
+        default: "https://cdn-icons-png.flaticon.com/512/149/149071.png",
+      },
+      public_id:{
+        type:String,
+      }
     },
     refreshToken: {
       type: String,

@@ -11,6 +11,17 @@ import crypto from "crypto";
 export const hashToken = (token) => {
   return crypto.createHash("md5").update(token).digest("hex");
 };
+let formatUser=(user)=>{
+    return {
+        name:user.name,
+        username:user.username,
+        email:user.email,
+        bio:user.bio,
+        id:user._id,
+        contacts:user.contacts,
+        avatar:user.avatar.url,
+    }
+}
 
 export const authServices = {
   login: async (data) => {
@@ -31,15 +42,7 @@ export const authServices = {
     let refreshToken = generateRefreshToken({ id: user._id });
     user.refreshToken = hashToken(refreshToken);
     await user.save();
-    let sentUser = {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      bio: user.bio,
-      id: user._id,
-      contacts: user.contacts,
-      avatar: user.avatar,
-    };
+    let sentUser = formatUser(user)
     return { success: true, user: sentUser, accessToken, refreshToken };
   },
   register: async (data) => {
@@ -64,15 +67,7 @@ export const authServices = {
     let refreshToken = generateRefreshToken({ id: user._id });
     user.refreshToken = hashToken(refreshToken);
     await user.save();
-    let sentUser = {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      bio: user.bio,
-      id: user._id,
-      contacts: user.contacts,
-      avatar: user.avatar,
-    };
+    let sentUser = formatUser(user)
     return { success: true, user: sentUser, accessToken, refreshToken };
   },
   refershToken: async (data) => {
@@ -95,15 +90,7 @@ export const authServices = {
     let newRefreshToken = generateRefreshToken({ id: user._id });
     user.refreshToken = hashToken(newRefreshToken);
     await user.save();
-    let sentUser = {
-      name: user.name,
-      username: user.username,
-      email: user.email,
-      bio: user.bio,
-      id: user._id,
-      contacts: user.contacts,
-      avatar: user.avatar,
-    };
+    let sentUser = formatUser(user)
     return {
       success: true,
       user: sentUser,
