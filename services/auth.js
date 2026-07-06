@@ -77,6 +77,9 @@ export const authServices = {
   },
   refershToken: async (data) => {
     let { refreshToken } = data;
+    if (!refreshToken) {
+      throw new Error("Token not found");
+    }
     let decoded = verifyRefreshToken(refreshToken);
     if (!decoded) {
       throw new Error("Invalid token");
@@ -109,7 +112,11 @@ export const authServices = {
     };
   },
   logout: async (data) => {
-    User.findByIdAndUpdate(data.id, { refreshToken: null });
+    let user = verifyRefreshToken(data.refreshToken);
+    if (!user) {
+      throw new Error("Invalid token");
+    }
+    await User.findByIdAndUpdate(user.id, { refreshToken: null });
     return { success: true, message: "Logout successfully" };
   },
 };
