@@ -12,8 +12,13 @@ const msgSchema=new Schema({
     conversation:{
         type:Schema.Types.ObjectId,
         ref:"Conversation"
+    },
+    deleted:{
+        type:Boolean,
+        default:false
     }
-})
+
+},{timestamps:true })
 
 const Message=mongoose.model("Message",msgSchema)
 

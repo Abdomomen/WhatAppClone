@@ -6,7 +6,7 @@ const conversationSchema=new Schema({
         enum:["private","group"],
         default:"private"
     },
-    participants:[
+    members:[
         {
             type:Schema.Types.ObjectId,
             ref:"User"
