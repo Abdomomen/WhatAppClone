@@ -16,8 +16,7 @@ const msgSchema=new Schema({
     deleted:{
         type:Boolean,
         default:false
-    }
-
+    },
 },{timestamps:true })
 
 const Message=mongoose.model("Message",msgSchema)

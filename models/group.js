@@ -21,9 +21,16 @@ const groupSchema=new Schema({
         publicId:{
             type:String
         }
+    },
+    bio:{
+        type:String,
+        default:""
+    },
+    conversation:{
+        type:Schema.Types.ObjectId,
+        ref:"Conversation"
     }
 })
 
 const Group=mongoose.model("Group",groupSchema)
-
 export default Group
