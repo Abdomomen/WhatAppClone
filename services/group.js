@@ -5,6 +5,14 @@ import User from "../models/user.js";
 import { uploadImage, deleteImage } from "../cloudinary.js";
 
 const groupServices = {
+  getGroup: async (groupId) => {
+    let group = await Group.findById(groupId);
+    return group;
+  },
+  getGroups: async (userId) => {
+    let groups = await Group.find({ members: { $in: [userId] } });
+    return groups;
+  },
   createGroup: async (userId, name) => {
     let group = new Group({
       name,
