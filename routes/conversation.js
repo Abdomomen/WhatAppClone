@@ -29,12 +29,5 @@ conversationRouter.get(
   validate(getConversationSchema),
   getConversation,
 );
-conversationRouter.delete(
-  "/:conversationId",
-  generalLimiter,
-  verifyJwt,
-  validate(deleteConversationSchema),
-  deleteConversation,
-);
 
 export default conversationRouter;
