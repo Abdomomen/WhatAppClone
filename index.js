@@ -10,8 +10,8 @@ import authRouter from "./routes/auth.js";
 import userRouter from "./routes/user.js";
 import groupRouter from "./routes/group.js";
 import { connectDB } from "./db/connectDb.js";
+import conversationRouter from "./routes/conversation.js";
 // connect to DB
-
 connectDB();
 const app = express();
 const server = http.createServer(app);
@@ -23,13 +23,9 @@ app.use(cors());
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/groups", groupRouter);
+app.use("/api/v1/conversations",conversationRouter)
 app.use(globalError);
 
 server.listen(3000, () => {
   console.log("server is running on port 3000");
 });
-
-// todo list
-// 1. define the project structure / pattern design
-// 2: install socket.io or ws
-// 3: install cloudinary
