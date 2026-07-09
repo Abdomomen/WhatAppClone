@@ -1,38 +1,26 @@
 function globalError(err, req, res, next) {
-  let error = { ...err };
-  error.message = err.message;
-  error.statusCode = err.statusCode;
-  error.status = err.status;
+  console.error(err.message);
 
-  console.error(error.message);
-
-  if (err.message === "TokenExpired") {
-    error.message = "Token Expired";
-    error.statusCode = 401;
-    error.status = "fail";
+  // Handle JWT library errors specifically
+  if (err.name === "TokenExpiredError") {
+    return res
+      .status(401)
+      .json({ success: false, status: "fail", message: "Token has expired" });
   }
-  if (err.message === "Invalid Token") {
-    error.message = "Invalid Token";
-    error.statusCode = 401;
-    error.status = "fail";
-  }
-  if (err.message === "Token not found") {
-    error.message = "Token not found";
-    error.statusCode = 401;
-    error.status = "fail";
-  }
-  if (err.message === "Token not found") {
-    error.message = "Token not found";
-    error.statusCode = 401;
-    error.status = "fail";
+  if (err.name === "JsonWebTokenError") {
+    return res
+      .status(401)
+      .json({ success: false, status: "fail", message: "Invalid token" });
   }
 
-  const statusCode = error.statusCode || 500;
-  const status = error.status || "error";
+  const statusCode = err.statusCode || 500;
+  const status =
+    err.status || (statusCode >= 400 && statusCode < 500 ? "fail" : "error");
 
   res.status(statusCode).json({
-    status: status,
-    message: error.message || "Internal Server Error",
+    success: false,
+    status,
+    message: err.message || "Internal Server Error",
   });
 }
 

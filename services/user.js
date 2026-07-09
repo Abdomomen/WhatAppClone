@@ -39,7 +39,7 @@ const userServices = {
     ) {
       user.avatar = newImg;
     } else {
-      await deleteImage(oldUrl.public_id);
+      await deleteImage(oldUrl.publicId);
       user.avatar = newImg;
     }
     await user.save();
