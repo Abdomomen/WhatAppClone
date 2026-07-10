@@ -13,6 +13,7 @@ import {
   deleteConversationSchema,
   getConversationsSchema,
 } from "../validation/conversation.js";
+
 const conversationRouter = Router();
 
 conversationRouter.get(
@@ -28,6 +29,13 @@ conversationRouter.get(
   verifyJwt,
   validate(getConversationSchema),
   getConversation,
+);
+conversationRouter.delete(
+  "/:conversationId",
+  generalLimiter,
+  verifyJwt,
+  validate(deleteConversationSchema),
+  deleteConversation,
 );
 
 export default conversationRouter;

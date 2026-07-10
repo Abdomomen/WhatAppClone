@@ -3,6 +3,7 @@ import Conversation from "../models/conversation.js";
 import Message from "../models/msg.js";
 import User from "../models/user.js";
 import { uploadImage, deleteImage } from "../cloudinary.js";
+import conversationStateServices from "./conversationState.js";
 
 const groupServices = {
   getGroup: async (groupId) => {
@@ -26,6 +27,11 @@ const groupServices = {
     group.conversation = groupConversation._id;
     await group.save();
     await groupConversation.save();
+    // Create a ConversationState doc for the admin
+    await conversationStateServices.createStateForGroup(
+      userId,
+      groupConversation._id,
+    );
     return group;
   },
   addMember: async (userId, groupId, memberId) => {
@@ -43,6 +49,11 @@ const groupServices = {
       throw new Error("member already exists in group 🤷‍♀️");
     group.members.push(memberId);
     await group.save();
+    // Create a ConversationState doc for the new member
+    await conversationStateServices.createStateForMember(
+      memberId,
+      group.conversation,
+    );
     return group;
   },
   removeMember: async (userId, groupId, memberId) => {

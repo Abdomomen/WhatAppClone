@@ -3,6 +3,7 @@ import Conversation from "../models/conversation.js";
 import Group from "../models/group.js";
 import manager from "../ws/wsManager.js";
 import { WebSocket } from "ws";
+import conversationStateServices from "./conversationState.js";
 // helper functions
 async function getConversationMembers(conversation) {
   if (conversation.type === "private") {
@@ -53,10 +54,18 @@ const msgServices = {
         };
 
         let msg = await Message.create(formatedMsg);
-        sendMsgToUser(ws.userId, msg);
         conversation.lastMessage = msg._id;
+        await Promise.all([
+          conversation.save(),
+          // Sender has read their own message by definition
+          conversationStateServices.markAsRead(
+            ws.userId,
+            data.conversation,
+            msg._id,
+          ),
+        ]);
+        sendMsgToUser(ws.userId, msg);
         sendMsgToUser(toUser, msg);
-        await conversation.save();
       } else {
         if (!data.to)
           throw new Error(
@@ -77,9 +86,16 @@ const msgServices = {
             content: data.content,
           });
           existenceConversation.lastMessage = msg._id;
+          await Promise.all([
+            existenceConversation.save(),
+            conversationStateServices.markAsRead(
+              ws.userId,
+              existenceConversation._id,
+              msg._id,
+            ),
+          ]);
           sendMsgToUser(ws.userId, msg);
           sendMsgToUser(data.to, msg);
-          await existenceConversation.save();
           return;
         }
         let conversation = new Conversation({
@@ -92,7 +108,21 @@ const msgServices = {
           content: data.content,
         });
         conversation.lastMessage = msg._id;
-        await conversation.save();
+        await Promise.all([
+          conversation.save(),
+          // New conversation: create state docs for both users
+          conversationStateServices.createStatesForPrivate(
+            ws.userId,
+            data.to,
+            conversation._id,
+          ),
+          // Sender has already read their own first message
+          conversationStateServices.markAsRead(
+            ws.userId,
+            conversation._id,
+            msg._id,
+          ),
+        ]);
         sendMsgToUser(ws.userId, msg);
         sendMsgToUser(data.to, msg);
       }
@@ -254,6 +284,20 @@ const msgServices = {
         );
       }
       console.error("Error in stopTyping:", error);
+    }
+  },
+
+  broadcastReadReceipt: async (ws, conversationId, messageId) => {
+    let conversation = await Conversation.findById(conversationId);
+    if (!conversation) return;
+    let memberIds = await getConversationMembers(conversation);
+    for (let id of memberIds) {
+      if (id === ws.userId) continue;
+      sendMsgToUser(
+        id,
+        { conversationId, readBy: ws.userId, messageId },
+        "read_receipt",
+      );
     }
   },
 };
