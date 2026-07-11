@@ -1,0 +1,29 @@
+@import "tailwindcss";
+
+@theme {
+  --color-wa-dark: #111b21;
+  --color-wa-surface: #202c33;
+  --color-wa-input: #2a3942;
+  --color-wa-green: #00a884;
+  --color-wa-green-hover: #017d63;
+  --color-wa-text: #e9edef;
+  --color-wa-muted: #8696a0;
+  --color-wa-error: #ff6b7a;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
