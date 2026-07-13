@@ -19,11 +19,16 @@ initWebSocketServer(server);
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3001",
+    credentials: true,
+  }),
+);
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/users", userRouter);
 app.use("/api/v1/groups", groupRouter);
-app.use("/api/v1/conversations",conversationRouter)
+app.use("/api/v1/conversations", conversationRouter);
 app.use(globalError);
 
 server.listen(3000, () => {

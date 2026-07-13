@@ -8,7 +8,7 @@ const login = asyncWrapper(async (req, res) => {
   let result = await authServices.login({ email, password });
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -30,7 +30,7 @@ const register = asyncWrapper(async (req, res) => {
   });
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -46,7 +46,7 @@ const refershToken = asyncWrapper(async (req, res) => {
   let result = await authServices.refershToken({ refreshToken });
   res.cookie("refreshToken", result.refreshToken, {
     httpOnly: true,
-    secure: true,
+    secure: process.env.NODE_ENV === "production",
     sameSite: "strict",
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });

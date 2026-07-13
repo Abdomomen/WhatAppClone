@@ -8,7 +8,7 @@ const userRouter= Router()
 
 userRouter.post("/register",authLimiter,validate(registerSchema),register)
 userRouter.post("/login",authLimiter,validate(loginSchema),login)
-userRouter.post("/refershToken",refershToken)
+userRouter.post("/refresh",refershToken)
 userRouter.post("/logout",logout)
 
 export default userRouter
